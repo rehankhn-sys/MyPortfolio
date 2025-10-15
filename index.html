@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rehan Ali — Portfolio v6</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/a2e0e6b6bb.js" crossorigin="anonymous"></script>
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+</head>
+<body>
+  <!-- PARTICLES CANVAS -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="brand">Rehan<span>Ali</span></div>
+    <div class="controls">
+      <button id="themeToggle" aria-label="Toggle theme"><i class="fas fa-sun"></i></button>
+      <a id="downloadCv" href="cv.pdf" download class="cv-btn"><i class="fas fa-download"></i> CV</a>
+    </div>
+  </div>
+
+  <main id="page">
+    <!-- HERO -->
+    <section class="hero energetic reveal" id="home">
+      <img src="profile.jpg" alt="Rehan Ali" class="profile-pic">
+      <h1 class="name">Hi, I'm <span>Rehan Ali</span> 👨‍💻</h1>
+      <p class="role" id="typewriter"></p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn primary fast">View Projects</a>
+        <a href="#contact" class="btn outline fast">Contact</a>
+      </div>
+      <div class="social-hero">
+        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="glass-card reveal">
+      <h2>About Me</h2>
+      <p>I build fast, energetic interfaces and combine Python with front-end tech to create usable apps. Learning, building, repeating.</p>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="reveal">
+      <h2>Experience</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="time">2024 — Now</div>
+          <div class="content">
+            <h3>Learning & Freelance</h3>
+            <p>Front-end projects, small Python backends and client work.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="time">2022 — 2024</div>
+          <div class="content">
+            <h3>Self Projects</h3>
+            <p>Personal projects, demo apps, continuous learning.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="reveal">
+      <h2>Skills</h2>
+      <div class="skills-grid">
+        <div class="skill">
+          <div class="skill-name">HTML</div>
+          <div class="skill-bar"><div data-percent="95"></div></div>
+        </div>
+        <div class="skill">
+          <div class="skill-name">CSS</div>
+          <div class="skill-bar"><div data-percent="85"></div></div>
+        </div>
+        <div class="skill">
+          <div class="skill-name">JavaScript</div>
+          <div class="skill-bar"><div data-percent="75"></div></div>
+        </div>
+        <div class="skill">
+          <div class="skill-name">Python</div>
+          <div class="skill-bar"><div data-percent="70"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="glass-card reveal">
+      <h2>Projects</h2>
+      <div class="projects-grid">
+        <!-- Project 1 -->
+        <article class="project" data-title="Demo Project" data-img="project1.jpg" data-desc="A front-end demo showcasing animations, responsiveness and design." data-code="#" data-live="#">
+          <h3>Demo Project</h3>
+          <p>Energetic front-end demo.</p>
+          <div class="project-actions">
+            <button class="btn primary fast open-project">Open</button>
+            <button class="btn outline fast preview">Preview</button>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project" data-title="Python App" data-img="project2.jpg" data-desc="A simple Python backend prototype with HTML frontend." data-code="#" data-live="#">
+          <h3>Python App</h3>
+          <p>Backend + frontend prototype.</p>
+          <div class="project-actions">
+            <button class="btn primary fast open-project">Open</button>
+            <button class="btn outline fast preview">Preview</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="reveal">
+      <h2>Contact</h2>
+      <p>Want to work together? Send a quick message.</p>
+
+      <form id="contact-form" class="contact-form">
+        <input type="text" id="name" name="from_name" placeholder="Your Name" required>
+        <input type="email" id="email" name="from_email" placeholder="Your Email" required>
+        <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+        <div class="form-actions">
+          <button type="submit" class="btn primary fast">Send</button>
+          <div id="form-status" class="status"></div>
+        </div>
+      </form>
+
+      <div class="socials-row">
+        <a href="#"><i class="fab fa-github"></i> GitHub</a>
+        <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        <a href="mailto:yourname@email.com"><i class="fas fa-envelope"></i> Email</a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> Rehan Ali — Built v6 ⚡</p>
+    </footer>
+  </main>
+
+  <!-- PROJECT MODAL -->
+  <div id="project-modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <div class="modal-grid">
+        <div class="modal-image"><img src="" alt="project preview"></div>
+        <div class="modal-body">
+          <h3 id="modal-title"></h3>
+          <p id="modal-desc"></p>
+          <div class="modal-buttons">
+            <a id="modal-live" class="btn primary" href="#" target="_blank">View Live</a>
+            <a id="modal-code" class="btn outline" href="#" target="_blank">View Code</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
