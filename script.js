@@ -1,217 +1,91 @@
-/* Portfolio v6 JS
-   - particles canvas (neon dots + connecting lines)
-   - theme toggle
-   - typewriter
-   - reveal on scroll
-   - skillbars animate
-   - project modal (image + description + buttons)
-   - toast notifications
-   - EmailJS (place keys)
-*/
-
-// ---------- helpers ----------
-const $ = (s) => document.querySelector(s);
-const $$ = (s) => document.querySelectorAll(s);
-document.getElementById('year').textContent = new Date().getFullYear();
-
-// ---------- THEME ----------
-const themeToggle = $('#themeToggle');
-if(localStorage.getItem('theme') === 'light') document.body.classList.add('light');
-updateThemeIcon();
-themeToggle.addEventListener('click', () => {
-  document.body.classList.toggle('light');
-  localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
-  updateThemeIcon();
-});
-function updateThemeIcon(){ themeToggle.innerHTML = document.body.classList.contains('light') ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>'; }
-
-// ---------- TYPEWRITER (fast) ----------
-const phrases = ["Fast & Energetic Interfaces", "Web Developer • HTML + Python", "I build responsive UIs", "Let's build something!"];
-let pIdx = 0, cIdx = 0;
-const typeEl = $('#typewriter');
-const T = { typeSpeed: 70, eraseSpeed: 40, pause: 800 };
-function type(){
-  const cur = phrases[pIdx];
-  if(cIdx < cur.length){ typeEl.textContent += cur.charAt(cIdx++); typeEl.classList.add('caret'); setTimeout(type, T.typeSpeed); }
-  else setTimeout(erase, T.pause);
-}
-function erase(){
-  if(cIdx > 0){ typeEl.textContent = phrases[pIdx].substring(0, cIdx-1); cIdx--; setTimeout(erase, T.eraseSpeed); }
-  else { pIdx = (pIdx + 1) % phrases.length; setTimeout(type, 300); }
-}
-document.addEventListener('DOMContentLoaded', () => setTimeout(type, 400));
-
-// ---------- REVEAL ON SCROLL & SKILL BARS ----------
-const revealEls = $$('.reveal');
-const skillBars = $$('.skill-bar > div');
-function onScrollReveal(){
-  revealEls.forEach(el => {
-    const r = el.getBoundingClientRect();
-    if(r.top < window.innerHeight - 80) el.classList.add('visible');
-  });
-  skillBars.forEach(bar => {
-    const parent = bar.closest('.skill');
-    if(!parent) return;
-    const r = parent.getBoundingClientRect();
-    if(r.top < window.innerHeight - 80){
-      const pct = bar.getAttribute('data-percent') || bar.dataset.percent;
-      bar.style.width = pct + '%';
-    }
-  });
-}
-window.addEventListener('scroll', onScrollReveal);
-window.addEventListener('load', onScrollReveal);
-
-// ---------- PROJECT MODAL ----------
-const modal = $('#project-modal');
-const modalTitle = $('#modal-title');
-const modalDesc = $('#modal-desc');
-const modalImg = modal.querySelector('.modal-image img');
-const modalLive = $('#modal-live');
-const modalCode = $('#modal-code');
-const openBtns = $$('.open-project');
-openBtns.forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    const art = e.target.closest('.project');
-    openProjectModal(art);
+// Smooth scroll effect
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    document.querySelector(this.getAttribute('href')).scrollIntoView({
+      behavior: 'smooth'
+    });
   });
 });
-// Also preview button quick open with small animation
-$$('.preview').forEach(b => b.addEventListener('click', (e)=>{
-  const art = e.target.closest('.project');
-  openProjectModal(art);
-}));
 
-function openProjectModal(art){
-  if(!art) return;
-  const title = art.dataset.title || art.querySelector('h3').innerText;
-  const img = art.dataset.img || 'project-placeholder.jpg';
-  const desc = art.dataset.desc || art.querySelector('p').innerText;
-  const code = art.dataset.code || '#';
-  const live = art.dataset.live || '#';
-  modalTitle.textContent = title;
-  modalDesc.textContent = desc;
-  modalImg.src = img;
-  modalLive.href = live;
-  modalCode.href = code;
-  modal.classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-$('.modal-close').addEventListener('click', closeModal);
-modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
-function closeModal(){ modal.classList.remove('show'); document.body.style.overflow = ''; }
-
-// ---------- TOAST ----------
-const toast = $('#toast');
-function showToast(msg, time = 3000){
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(()=> toast.classList.remove('show'), time);
-}
-
-// ---------- EMAILJS CONTACT ----------
-(function(){
-  try { emailjs.init("YOUR_PUBLIC_KEY"); } catch(e){ console.warn('EmailJS not ready', e); }
-})();
-const form = $('#contact-form'), status = $('#form-status');
-form.addEventListener('submit', (e)=>{
+// Simple contact form alert
+document.querySelector('.contact-form').addEventListener('submit', function (e) {
   e.preventDefault();
-  status.textContent = 'Sending...';
-  const params = { from_name: $('#name').value, from_email: $('#email').value, message: $('#message').value };
-  emailjs.send('YOUR_SERVICE_ID','YOUR_TEMPLATE_ID', params).then(()=>{
-    status.textContent = '✅ Sent! I will reply soon.';
-    form.reset();
-    showToast('Message sent successfully!');
-    setTimeout(()=> status.textContent = '', 4000);
-  }, (err)=>{
-    console.error(err);
-    status.textContent = '❌ Send failed.';
-    showToast('Error sending message — check EmailJS keys.');
-  });
+  alert('Thank you for reaching out, Rehan will get back to you soon!');
+  this.reset();
 });
 
-// ---------- PARTICLES CANVAS (neon dots + connecting lines) ----------
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W = canvas.width = innerWidth;
-let H = canvas.height = innerHeight;
+// Particle background animation
+const particleCanvas = document.createElement('canvas');
+particleCanvas.id = 'particleCanvas';
+document.body.prepend(particleCanvas);
+const ctx1 = particleCanvas.getContext('2d');
 
-window.addEventListener('resize', ()=>{ W = canvas.width = innerWidth; H = canvas.height = innerHeight; initParticles(); });
+const waveCanvas = document.createElement('canvas');
+waveCanvas.id = 'waveCanvas';
+document.body.prepend(waveCanvas);
+const ctx2 = waveCanvas.getContext('2d');
 
 let particles = [];
-function rand(min,max){ return Math.random()*(max-min)+min; }
+const numParticles = 70;
 
-function initParticles(){
+function initParticles() {
+  particleCanvas.width = window.innerWidth;
+  particleCanvas.height = window.innerHeight;
   particles = [];
-  const count = Math.floor((W*H)/80000) + 25; // scale with screen
-  for(let i=0;i<count;i++){
+  for (let i = 0; i < numParticles; i++) {
     particles.push({
-      x: rand(0,W),
-      y: rand(0,H),
-      vx: rand(-0.35,0.35),
-      vy: rand(-0.35,0.35),
-      r: rand(1,2.6),
-      hue: rand(160,210),
-      alpha: rand(0.4,0.95)
+      x: Math.random() * particleCanvas.width,
+      y: Math.random() * particleCanvas.height,
+      size: Math.random() * 3,
+      speedX: (Math.random() - 0.5) * 0.5,
+      speedY: (Math.random() - 0.5) * 0.5,
     });
   }
 }
-function updateParticles(){
-  for(const p of particles){
-    p.x += p.vx;
-    p.y += p.vy;
-    if(p.x < -10) p.x = W + 10;
-    if(p.x > W + 10) p.x = -10;
-    if(p.y < -10) p.y = H + 10;
-    if(p.y > H + 10) p.y = -10;
-  }
-}
-function draw(){
-  ctx.clearRect(0,0,W,H);
-  // draw lines
-  for(let i=0;i<particles.length;i++){
-    const a = particles[i];
-    for(let j=i+1;j<particles.length;j++){
-      const b = particles[j];
-      const dx = a.x - b.x, dy = a.y - b.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if(dist < 120){
-        const op = 1 - dist/120;
-        ctx.strokeStyle = `rgba(0,200,255,${op*0.12})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(a.x,a.y);
-        ctx.lineTo(b.x,b.y);
-        ctx.stroke();
-      }
-    }
-  }
-  // draw dots
-  for(const p of particles){
-    ctx.beginPath();
-    ctx.fillStyle = `rgba(0,255,209,${p.alpha})`;
-    ctx.shadowColor = `rgba(0,255,209,0.18)`;
-    ctx.shadowBlur = 8;
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-  }
-}
 
-function animate(){
-  updateParticles();
-  draw();
-  requestAnimationFrame(animate);
-}
-initParticles();
-animate();
-
-// ---------- NAV LINK smooth behavior ----------
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click', (e)=>{
-    const t = document.querySelector(a.getAttribute('href'));
-    if(!t) return;
-    e.preventDefault();
-    t.scrollIntoView({behavior:'smooth', block:'start'});
+function animateParticles() {
+  ctx1.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+  ctx1.fillStyle = 'rgba(0, 188, 212, 0.8)';
+  particles.forEach(p => {
+    ctx1.beginPath();
+    ctx1.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx1.fill();
+    p.x += p.speedX;
+    p.y += p.speedY;
+    if (p.x < 0 || p.x > particleCanvas.width) p.speedX *= -1;
+    if (p.y < 0 || p.y > particleCanvas.height) p.speedY *= -1;
   });
+  requestAnimationFrame(animateParticles);
+}
+
+// Neon wave grid animation
+let waveTime = 0;
+function animateWaves() {
+  waveCanvas.width = window.innerWidth;
+  waveCanvas.height = window.innerHeight;
+  ctx2.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+  ctx2.strokeStyle = 'rgba(0, 188, 212, 0.2)';
+  ctx2.lineWidth = 1;
+
+  const gridSize = 40;
+  for (let y = 0; y < waveCanvas.height; y += gridSize) {
+    ctx2.beginPath();
+    for (let x = 0; x < waveCanvas.width; x += gridSize) {
+      const waveY = Math.sin((x + waveTime) * 0.02) * 8;
+      ctx2.lineTo(x, y + waveY);
+    }
+    ctx2.stroke();
+  }
+
+  waveTime += 1.5;
+  requestAnimationFrame(animateWaves);
+}
+
+window.addEventListener('resize', () => {
+  initParticles();
 });
+
+initParticles();
+animateParticles();
+animateWaves();
