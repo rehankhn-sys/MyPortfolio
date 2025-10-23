@@ -89,3 +89,28 @@ window.addEventListener('resize', () => {
 initParticles();
 animateParticles();
 animateWaves();
+document.getElementById("whatsappForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  let name = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let message = document.getElementById("message").value;
+
+  let phone = "+92 312 5028459"; // ← yahan apna WhatsApp number likho (without +)
+  
+  let url = `https://wa.me/${phone}?text=👋 Hello Rehan!%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Message:* ${message}`;
+
+  window.open(url, "_blank");
+  // Show success message
+  let success = document.getElementById("successMessage");
+  success.style.display = "block";
+
+  // Open WhatsApp
+  window.open(url, "_blank");
+
+  // Hide message after few seconds
+  setTimeout(() => {
+    success.style.display = "none";
+    document.getElementById("whatsappForm").reset();
+  }, 4000);
+});
